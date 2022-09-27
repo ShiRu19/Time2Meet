@@ -4,7 +4,8 @@ window.onload = function() {
 
 mouseDown = false;
 fillInColor = "white";
-mySet = new Set();
+isGreen = 0;
+userTime = [];
 
 var table = {
     createRow: 10,
@@ -38,6 +39,7 @@ var table = {
             div_row.className = "timeOfTable";
             for(let cell = 0; cell < 7; cell++) {
                 var div_cell = document.createElement('div');
+                userTime.push(0);
                 div_cell.style.backgroundColor = "white";
                 div_cell.id = "user" + (row*7 + cell);
 
@@ -45,28 +47,38 @@ var table = {
                     var myCell = document.getElementById("user" + (row*7 + cell));
                     if(myCell.style.backgroundColor == "white") {
                         fillInColor = "green";
+                        isGreen = 1;
                     } else {
                         fillInColor = "white";
+                        isGreen = 0;
                     }
                     myCell.style.backgroundColor = fillInColor;
-                    mySet.add(row*7 + cell);
+                    userTime[row*7 + cell] = isGreen;
                     mouseDown = true;
                 })
 
                 div_cell.addEventListener('mouseup', function mouseupHandle() {
                     mouseDown = false;
-                    /*
-                    mySet.forEach(function(value) {
-                        console.log(value);
-                    })*/
-                    mySet.clear();
+                    printStr = "";
+                    userTime.forEach(function(value) {
+                        printStr += "," + value;
+                    })
+                    $.ajax({
+                        type: "POST",
+                        url: "~/insertSQL.py",
+                        data: {
+                            param: "Hello world",
+                        }
+                    }).done((o) => {
+                        console.log(o)
+                    });
                 })
 
                 div_cell.addEventListener('mousemove', function mousemoveHandle() {
                     if(mouseDown) {
                         var myCell = document.getElementById("user" + (row*7 + cell));
                         myCell.style.backgroundColor = fillInColor;
-                        mySet.add(row*7 + cell);
+                        userTime[row*7 + cell] = isGreen;
                     }
                 })
 
