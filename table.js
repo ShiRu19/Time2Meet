@@ -41,6 +41,9 @@ var table = {
                 var div_cell = document.createElement('div');
                 userTime.push(0);
                 div_cell.style.backgroundColor = "white";
+                div_cell.ondragstart = () => {
+                    return false;
+                };
                 div_cell.id = "user" + (row*7 + cell);
 
                 div_cell.addEventListener("mousedown", function mousedownHandle() {
@@ -63,6 +66,7 @@ var table = {
                     userTime.forEach(function(value) {
                         printStr += "," + value;
                     })
+                    /*
                     $.ajax({
                         type: "POST",
                         url: "~/insertSQL.py",
@@ -71,7 +75,7 @@ var table = {
                         }
                     }).done((o) => {
                         console.log(o)
-                    });
+                    });*/
                 })
 
                 div_cell.addEventListener('mousemove', function mousemoveHandle() {
