@@ -1,8 +1,13 @@
 from django.contrib import admin
-from .models import Post
+from .models import User, Project
 
-class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'projectName', 'userName')
-    search_fields = ('projectName', 'userName')
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = ('id', 'projectName')
+    search_fields = ('id', 'projectName')
 
-admin.site.register(Post, PostAdmin)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('id', 'userName')
+    search_fields = ('id', 'userName')
+
+admin.site.register(Project, ProjectAdmin)
+admin.site.register(User, UserAdmin)
