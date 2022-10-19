@@ -13,4 +13,11 @@ window.onload = function() {
             newProjectName.style.color = "darkgray";
         }
     }
+    goBtn.onclick = function() {
+        if(newProjectName.value == "New Project Name") {
+            alert("Please enter your project name!");
+        } else {
+            location.href='/post';
+        }
+    }
 }

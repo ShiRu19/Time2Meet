@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from post.views import PostFillOutForm, RegisterProject
+from post.views import PostFillOutForm, RegisterProject, submit
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', RegisterProject.as_view()),
-    path('<pk>', PostFillOutForm.as_view())
+    path('<pk>', PostFillOutForm.as_view(), name="PostFillOutForm"),
+    path('submit/', submit)
 ]

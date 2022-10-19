@@ -1,12 +1,12 @@
 .twoTable{
-    margin-top: 15%;
+    margin-top: 10vh;
     text-align: center;
 }
 .titleOfTable div{
     vertical-align: top;
     display: inline-block;
     width: 50px;
-    height: 25px;
+    height: 10px;
 }
 .timeOfTable div{
     border: 1px solid black;

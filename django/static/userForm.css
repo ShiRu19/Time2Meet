@@ -1,5 +1,27 @@
 #projectName {
     font-weight: bold;
-    margin-top: 2%;
+    margin-top: 55px;
     margin-left: 2%;
+}
+#bottomBlock {
+    background-color: black;
+    width: 100vw;
+    height: 30vh;
+    position: absolute;
+    bottom: 0px;
+}
+.topBlock {
+    background-color: black;
+    width: 100vw;
+    height: 45px;
+    position: absolute;
+    top: 0px;
+}
+.links {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 10px;
+    margin-left: 2%;
+    font-weight: bold;
+    font-size: large;
 }

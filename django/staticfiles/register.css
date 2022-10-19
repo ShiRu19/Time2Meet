@@ -4,7 +4,8 @@
 #newProjectName {
     display: flex;
     align-items: center;
-    margin: 30px auto;
+    margin: 0 auto;
+    margin-top: 40vh;
     height: 50px;
     text-align: center;
     color:darkgray;
@@ -16,4 +17,19 @@
     display: flex;
     align-items: center;
     margin: 0 auto;
+}
+.topBlock {
+    background-color: black;
+    width: 100vw;
+    height: 5vh;
+    position: absolute;
+    top: 0px;
+}
+.links {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 10px;
+    margin-left: 2%;
+    font-weight: bold;
+    font-size: large;
 }

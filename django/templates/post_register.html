@@ -1,8 +1,12 @@
 {% extends 'base_register.html' %}
 {% block body %}
-<div id="registerBlock">
-    <input type="text" id="newProjectName" value="New Project Name">
-    <br>
-    <button id="goBtn" onclick="location.href='/1'">Go</button>
-</div>
+{% load static %}
+<form method="POST" action="submit/">
+    {% csrf_token %}
+    <div id="registerBlock">
+        <input type="text" id="newProjectName" name="projectName" placeholder="New Project Name" required >
+        <br>
+        <input type="submit" id="goBtn" value="Go">
+    </div>
+</form>
 {% endblock %}
