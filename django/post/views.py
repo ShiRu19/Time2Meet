@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect
 from django.http import HttpResponse
-from .models import Project, User
+from .models import Participation, Project, User
 #from django.http import HttpResponse
 
 class PostFillOutForm(DetailView):

@@ -115,28 +115,28 @@ var login = {
 
             if(userName_enter == ""){
                 alert("Please enter your name.");
+                return;
             }
-            else {
-                $("#userName").text(userName_enter);
-                
-                // Create new user.
-                $.ajax({
-                    url: "createUser/",
-                    data: {
-                        'userName': userName_enter,
-                        'userPassword': userPassword_enter
-                    },
-                    success: function(return_data){
-                        if(return_data == "Create success") {
-                            $("#userLogin").hide();
-                            $("#userTable").show();
-                        }
-                        else {
-                            alert(return_data);
-                        }
+            
+            $("#userName").text(userName_enter);
+            
+            // Create new user.
+            $.ajax({
+                url: "createUser/",
+                data: {
+                    'userName': userName_enter,
+                    'userPassword': userPassword_enter
+                },
+                success: function(return_data){
+                    if(return_data == "Create success") {
+                        $("#userLogin").hide();
+                        $("#userTable").show();
                     }
-                })
-            }
+                    else {
+                        alert(return_data);
+                    }
+                }
+            })
         })
     }
 }

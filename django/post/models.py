@@ -20,3 +20,14 @@ class User(models.Model):
 
     def __str__(self):
         return self.userName
+
+class Participation(models.Model):
+    class Meta:
+        verbose_name = '專案參與列表'
+        verbose_name_plural = '專案參與列表'
+
+    projectId = models.CharField('專案ID', max_length=20, blank=False)
+    userId = models.CharField('使用者ID', max_length=20, blank=False)
+
+    def __str__(self):
+        return self.userName
