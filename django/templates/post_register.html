@@ -1,7 +1,7 @@
 {% extends 'base_register.html' %}
 {% block body %}
 {% load static %}
-<form method="POST" action="submit/">
+<form method="POST" action="createProject/">
     {% csrf_token %}
     <div id="registerBlock">
         <input type="text" id="newProjectName" name="projectName" placeholder="New Project Name" required >

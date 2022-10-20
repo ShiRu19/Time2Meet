@@ -1,5 +1,6 @@
 window.onload = function() {
     table.init();
+    login.init();
 }
 
 mouseDown = false;
@@ -103,5 +104,39 @@ var table = {
             }
             table.appendChild(div_row);
         }
+    }
+}
+
+var login = {
+    init() {
+        $("#loginBtn").click(function(e) {
+            var userName_enter = $("#userName_enter").val();
+            var userPassword_enter = $("#userPassword_enter").val();
+
+            if(userName_enter == ""){
+                alert("Please enter your name.");
+            }
+            else {
+                $("#userName").text(userName_enter);
+                
+                // Create new user.
+                $.ajax({
+                    url: "createUser/",
+                    data: {
+                        'userName': userName_enter,
+                        'userPassword': userPassword_enter
+                    },
+                    success: function(return_data){
+                        if(return_data == "Create success") {
+                            $("#userLogin").hide();
+                            $("#userTable").show();
+                        }
+                        else {
+                            alert(return_data);
+                        }
+                    }
+                })
+            }
+        })
     }
 }

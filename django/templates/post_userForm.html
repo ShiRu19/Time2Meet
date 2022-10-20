@@ -1,7 +1,16 @@
 {% extends 'base_userForm.html' %}
 {% block body %}
-<div id="userTable" class="tables">
-    <h4 style="font-weight: bold;">userName's Availability</h4>
+<div id="userLogin" class="tables">
+    <label for="userName_enter">Your name</label>
+    <input type="text" class="form-control" id="userName_enter" placeholder="Enter name" required="required">
+    <br>
+    <label for="userPassword_enter">Password</label>
+    <input type="text" class="form-control"  id="userPassword_enter" placeholder="Password">
+    <br>
+    <input type="button" class="btn btn-primary" id="loginBtn" value="Login">
+</div>
+<div id="userTable" class="tables" style="display:none">
+    <h4 style="font-weight: bold;"><span id="userName"></span><span>'s Availability</span></h4>
     <h6>Click and Drag to Toggle; Saved Immediately</h6>
     <br>
 </div>
