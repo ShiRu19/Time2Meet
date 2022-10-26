@@ -5,6 +5,7 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from .models import Participation, Project, User
+from static import data
 #from django.http import HttpResponse
 
 class PostFillOutForm(DetailView):
@@ -25,9 +26,23 @@ def createProject(request):
 def createUser(request):
     userName = request.GET.get('userName')
     userPassword = request.GET.get('userPassword')
-    if userName is not None:
-        cuser = User.objects.create(userName=userName, userPassword=userPassword)
-        cuser.save()
+    projectId = request.GET.get('projectId')
+
+    result_verifySignUpData = data.verifyUserSignUpData(projectId, userName)
+    if not result_verifySignUpData:
+            return HttpResponse("User already exists")
+
+    if data.createUser(userName, userPassword, projectId):
         return HttpResponse("Create success")
-    return HttpResponse("Create error")
-        
+    else:
+        return HttpResponse("Create error")
+
+def userLogin(request):
+    userName = request.GET.get('userName')
+    userPassword = request.GET.get('userPassword')
+    projectId = request.GET.get('projectId')
+    result_verifyUserLoginData = data.verifyUserLoginData(projectId, userName, userPassword)
+    if(result_verifyUserLoginData):
+        return HttpResponse("Login success")
+    else:
+        return HttpResponse("Wrong user name or password")

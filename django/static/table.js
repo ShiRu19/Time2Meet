@@ -109,6 +109,38 @@ var table = {
 
 var login = {
     init() {
+        $("#signUpBtn").click(function(e) {
+            var userName_enter = $("#userName_enter").val();
+            var userPassword_enter = $("#userPassword_enter").val();
+
+            if(userName_enter == ""){
+                alert("Please enter your name.");
+                return;
+            }
+            var projectId = window.location.pathname;
+            projectId = projectId.substring(1);
+
+            // Create new user.
+            $.ajax({
+                url: "createUser/",
+                data: {
+                    'userName': userName_enter,
+                    'userPassword': userPassword_enter,
+                    'projectId': projectId
+                },
+                success: function(return_data){
+                    if(return_data == "Create success") {
+                        $("#userLogin").hide();
+                        $("#userTable").show();
+                        $("#userName").text(userName_enter);
+                    }
+                    else {
+                        alert(return_data);
+                    }
+                }
+            })
+        })
+
         $("#loginBtn").click(function(e) {
             var userName_enter = $("#userName_enter").val();
             var userPassword_enter = $("#userPassword_enter").val();
@@ -117,20 +149,22 @@ var login = {
                 alert("Please enter your name.");
                 return;
             }
-            
-            $("#userName").text(userName_enter);
-            
+            var projectId = window.location.pathname;
+            projectId = projectId.substring(1);
+
             // Create new user.
             $.ajax({
-                url: "createUser/",
+                url: "userLogin/",
                 data: {
                     'userName': userName_enter,
-                    'userPassword': userPassword_enter
+                    'userPassword': userPassword_enter,
+                    'projectId': projectId
                 },
                 success: function(return_data){
-                    if(return_data == "Create success") {
+                    if(return_data == "Login success") {
                         $("#userLogin").hide();
                         $("#userTable").show();
+                        $("#userName").text(userName_enter);
                     }
                     else {
                         alert(return_data);
