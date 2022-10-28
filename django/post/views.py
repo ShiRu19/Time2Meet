@@ -39,7 +39,6 @@ def createUser(request):
     else:
         result_createUser["result"] = "Sign up error"
 
-    print(result_createUser)
     return HttpResponse(json.dumps(result_createUser))
 
 def userLogin(request):
@@ -58,7 +57,6 @@ def updateUserAvailableTime(request):
     projectId = request.GET.get('projectId')
     userId = request.GET.get('userId')
     availableTime = request.GET.get('availableTime')
-    print(str(availableTime)+"~~~~~")
     result_updateUserAvailableTime = AvailableTime.updateUserAvailableTime(projectId, userId, availableTime)
     if(result_updateUserAvailableTime):
         return HttpResponse("Update success")
@@ -72,3 +70,8 @@ def getAllAvailableTime_project(request):
     projectId = request.GET.get('projectId')
     result_getAllAvailableTime_project = AvailableTime.getAllAvailableTime_project(projectId)
     return HttpResponse(json.dumps(result_getAllAvailableTime_project))
+
+def getUserCount(request):
+    projectId = request.GET.get('projectId')
+    result_getUserCount = User.objects.all().count()
+    return HttpResponse(result_getUserCount)

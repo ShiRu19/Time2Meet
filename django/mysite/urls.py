@@ -18,7 +18,8 @@ from django.urls import path
 
 from post.views import PostFillOutForm, RegisterProject,\
     createProject, createUser, userLogin,\
-    updateUserAvailableTime, getAllAvailableTime_user, getAllAvailableTime_project
+    updateUserAvailableTime, getAllAvailableTime_user, getAllAvailableTime_project,\
+    getUserCount
 
 
 urlpatterns = [
@@ -30,5 +31,6 @@ urlpatterns = [
     path('userLogin/', userLogin),
     path('updateUserAvailableTime/', updateUserAvailableTime),
     path('getAllAvailableTime_user/', getAllAvailableTime_user),
-    path('getAllAvailableTime_project/', getAllAvailableTime_project)
+    path('getAllAvailableTime_project/', getAllAvailableTime_project),
+    path('getUserCount/', getUserCount)
 ]
