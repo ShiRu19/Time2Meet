@@ -1,4 +1,6 @@
 window.onload = function() {
+    projectId = window.location.pathname;
+    projectId = projectId.substring(1);
     table.init();
     login.init();
 }
@@ -7,6 +9,8 @@ mouseDown = false;
 fillInColor = "white";
 isGreen = 0;
 userTime = [];
+projectId = 0;
+userId = 0;
 
 var table = {
     createRow: 10,
@@ -63,20 +67,22 @@ var table = {
 
                 div_cell.addEventListener('mouseup', function mouseupHandle() {
                     mouseDown = false;
-                    printStr = "";
+                    availableTime = "";
                     userTime.forEach(function(value) {
-                        printStr += "," + value;
+                        availableTime += "," + value;
                     })
-                    /*
+                    // Update user available time.
                     $.ajax({
-                        type: "POST",
-                        url: "~/insertSQL.py",
+                        url: "updateUserAvailableTime/",
                         data: {
-                            param: "Hello world",
+                            'projectId': projectId,
+                            'userId': userId,
+                            'availableTime': availableTime.substring(1)
+                        },
+                        success: function(return_data){
+                            alert(return_data);
                         }
-                    }).done((o) => {
-                        console.log(o)
-                    });*/
+                    })
                 })
 
                 div_cell.addEventListener('mousemove', function mousemoveHandle() {
@@ -117,8 +123,6 @@ var login = {
                 alert("Please enter your name.");
                 return;
             }
-            var projectId = window.location.pathname;
-            projectId = projectId.substring(1);
 
             // Create new user.
             $.ajax({
@@ -129,14 +133,7 @@ var login = {
                     'projectId': projectId
                 },
                 success: function(return_data){
-                    if(return_data == "Create success") {
-                        $("#userLogin").hide();
-                        $("#userTable").show();
-                        $("#userName").text(userName_enter);
-                    }
-                    else {
-                        alert(return_data);
-                    }
+                    login.switchScreen(return_data, userName_enter);
                 }
             })
         })
@@ -149,10 +146,8 @@ var login = {
                 alert("Please enter your name.");
                 return;
             }
-            var projectId = window.location.pathname;
-            projectId = projectId.substring(1);
 
-            // Create new user.
+            // User Login.
             $.ajax({
                 url: "userLogin/",
                 data: {
@@ -161,16 +156,21 @@ var login = {
                     'projectId': projectId
                 },
                 success: function(return_data){
-                    if(return_data == "Login success") {
-                        $("#userLogin").hide();
-                        $("#userTable").show();
-                        $("#userName").text(userName_enter);
-                    }
-                    else {
-                        alert(return_data);
-                    }
+                    login.switchScreen(return_data, userName_enter);
                 }
             })
         })
+    },
+    switchScreen(return_data, userName_enter) {
+        return_data = JSON.parse(return_data);
+        if(return_data.result == "Login success" || return_data.result == "Sign up success") {
+            userId = return_data.userId;
+            $("#userLogin").hide();
+            $("#userTable").show();
+            $("#userName").text(userName_enter);
+        }
+        else {
+            alert(return_data);
+        }
     }
 }

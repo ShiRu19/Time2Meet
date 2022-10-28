@@ -1,11 +1,12 @@
 from contextlib import redirect_stderr, redirect_stdout
+import json
 from urllib import request, response
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from .models import Participation, Project, User
-from static import data
+from static.data import UserLogin, UserSignUp, AvailableTime
 #from django.http import HttpResponse
 
 class PostFillOutForm(DetailView):
@@ -28,21 +29,41 @@ def createUser(request):
     userPassword = request.GET.get('userPassword')
     projectId = request.GET.get('projectId')
 
-    result_verifySignUpData = data.verifyUserSignUpData(projectId, userName)
+    result_verifySignUpData = UserSignUp.verifyUserSignUpData(projectId, userName)
     if not result_verifySignUpData:
-            return HttpResponse("User already exists")
+        return HttpResponse("User already exists")
 
-    if data.createUser(userName, userPassword, projectId):
-        return HttpResponse("Create success")
+    result_createUser = UserSignUp.createUser(userName, userPassword, projectId)
+    if result_createUser["result"]:
+        result_createUser["result"] = "Sign up success"
     else:
-        return HttpResponse("Create error")
+        result_createUser["result"] = "Sign up error"
+
+    print(result_createUser)
+    return HttpResponse(json.dumps(result_createUser))
 
 def userLogin(request):
     userName = request.GET.get('userName')
     userPassword = request.GET.get('userPassword')
     projectId = request.GET.get('projectId')
-    result_verifyUserLoginData = data.verifyUserLoginData(projectId, userName, userPassword)
-    if(result_verifyUserLoginData):
-        return HttpResponse("Login success")
+    result_verifyUserLoginData = UserLogin.verifyUserLoginData(projectId, userName, userPassword)
+    if(result_verifyUserLoginData["result"]):
+        result_verifyUserLoginData["result"] = "Login success"
     else:
-        return HttpResponse("Wrong user name or password")
+        result_verifyUserLoginData["result"] = "Wrong user name or password"
+    
+    return HttpResponse(json.dumps(result_verifyUserLoginData))
+
+def updateUserAvailableTime(request):
+    projectId = request.GET.get('projectId')
+    userId = request.GET.get('userId')
+    availableTime = request.GET.get('availableTime')
+    print(str(availableTime)+"~~~~~")
+    result_updateUserAvailableTime = AvailableTime.updateUserAvailableTime(projectId, userId, availableTime)
+    if(result_updateUserAvailableTime):
+        return HttpResponse("Update success")
+
+def getAllAvailableTime(request):
+    projectId = request.GET.get('projectId')
+    result_getAllAvailableTime = AvailableTime.getAllAvailableTime(projectId)
+    return HttpResponse(result_getAllAvailableTime)

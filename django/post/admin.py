@@ -8,15 +8,15 @@ class ProjectAdmin(admin.ModelAdmin):
     inlines = [
         ParticipationInline
     ]
-    list_display = ('id', 'projectName')
-    search_fields = ('id','projectName')
+    list_display = ('id', 'projectName', 'availableTime')
+    search_fields = ('id','projectName', 'availableTime')
 
 class UserAdmin(admin.ModelAdmin):
     inlines = [
         ParticipationInline
     ]
-    list_display = ('id', 'userName', 'userPassword')
-    search_fields = ('id','userName')
+    list_display = ('id', 'userName', 'userPassword', 'availableTime')
+    search_fields = ('id','userName', 'availableTime')
 
 class ParticipationAdmin(admin.ModelAdmin):
     list_display = ('id', 'projectId', 'userId')
