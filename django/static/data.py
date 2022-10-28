@@ -72,3 +72,13 @@ class AvailableTime:
         cuser.save()
         cproject.save()
         return True
+
+    def getAllAvailableTime_user(userId):
+        cuser = User.objects.get(id=userId)
+        userAvailableTime = str(cuser.availableTime).split(",")
+        return userAvailableTime
+
+    def getAllAvailableTime_project(projectId):
+        cproject = Project.objects.get(id=projectId)
+        projectAvailableTime = str(cproject.availableTime).split(",")
+        return projectAvailableTime

@@ -63,7 +63,12 @@ def updateUserAvailableTime(request):
     if(result_updateUserAvailableTime):
         return HttpResponse("Update success")
 
-def getAllAvailableTime(request):
+def getAllAvailableTime_user(request):
+    userId = request.GET.get('userId')
+    result_getAllAvailableTime_user = AvailableTime.getAllAvailableTime_user(userId)
+    return HttpResponse(json.dumps(result_getAllAvailableTime_user))
+
+def getAllAvailableTime_project(request):
     projectId = request.GET.get('projectId')
-    result_getAllAvailableTime = AvailableTime.getAllAvailableTime(projectId)
-    return HttpResponse(result_getAllAvailableTime)
+    result_getAllAvailableTime_project = AvailableTime.getAllAvailableTime_project(projectId)
+    return HttpResponse(json.dumps(result_getAllAvailableTime_project))
