@@ -55,7 +55,7 @@ class UserSignUp:
 
 class AvailableTime:
     def updateUserAvailableTime(projectId, userId, availableTime):
-        cparticipation = Participation.objects.get(id=userId)
+        cparticipation = Participation.objects.get(userId=userId)
         userAvailableTime = str(cparticipation.availableTime).split(",")
         cproject = Project.objects.get(id=projectId)
         projectAvailableTime = str(cproject.availableTime).split(",")

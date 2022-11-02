@@ -15,8 +15,8 @@ class UserAdmin(admin.ModelAdmin):
     inlines = [
         ParticipationInline
     ]
-    list_display = ('id', 'userName', 'userPassword', 'availableTime')
-    search_fields = ('id','userName', 'availableTime')
+    list_display = ('id', 'userName', 'userPassword')
+    search_fields = ('id','userName')
 
 class ParticipationAdmin(admin.ModelAdmin):
     list_display = ('id', 'projectId', 'userId', 'availableTime')
