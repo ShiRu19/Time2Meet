@@ -19,8 +19,8 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ('id','userName', 'availableTime')
 
 class ParticipationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'projectId', 'userId')
-    search_fields = ('id','projectId', 'userId')
+    list_display = ('id', 'projectId', 'userId', 'availableTime')
+    search_fields = ('id','projectId', 'userId', 'availableTime')
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(User, UserAdmin)

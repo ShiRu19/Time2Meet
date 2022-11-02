@@ -55,8 +55,8 @@ class UserSignUp:
 
 class AvailableTime:
     def updateUserAvailableTime(projectId, userId, availableTime):
-        cuser = User.objects.get(id=userId)
-        userAvailableTime = str(cuser.availableTime).split(",")
+        cparticipation = Participation.objects.get(id=userId)
+        userAvailableTime = str(cparticipation.availableTime).split(",")
         cproject = Project.objects.get(id=projectId)
         projectAvailableTime = str(cproject.availableTime).split(",")
         newAvailableTime = str(availableTime).split(",")
@@ -67,15 +67,15 @@ class AvailableTime:
             newAvailableTime_str += "," + projectAvailableTime[i]
         newAvailableTime_str = newAvailableTime_str[1:]
 
-        cuser.availableTime = str(availableTime)
+        cparticipation.availableTime = str(availableTime)
         cproject.availableTime = newAvailableTime_str
-        cuser.save()
+        cparticipation.save()
         cproject.save()
         return True
 
     def getAllAvailableTime_user(userId):
-        cuser = User.objects.get(id=userId)
-        userAvailableTime = str(cuser.availableTime).split(",")
+        cparticipation = Participation.objects.get(userId=userId)
+        userAvailableTime = str(cparticipation.availableTime).split(",")
         return userAvailableTime
 
     def getAllAvailableTime_project(projectId):

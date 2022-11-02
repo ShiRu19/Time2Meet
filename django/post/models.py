@@ -33,6 +33,7 @@ class Participation(models.Model):
 
     projectId = models.CharField('專案ID', max_length=20, blank=False)
     userId = models.CharField('使用者ID', max_length=20, blank=False)
+    availableTime = models.CharField('可用時間', max_length=500, blank=True)
 
     def __str__(self):
         return self.projectId
