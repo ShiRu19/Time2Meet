@@ -53,12 +53,19 @@ def userLogin(request):
     
     return HttpResponse(json.dumps(result_verifyUserLoginData))
 
-def updateUserAvailableTime(request):
+def updateAvailableTime_user(request):
     projectId = request.GET.get('projectId')
     userId = request.GET.get('userId')
     availableTime = request.GET.get('availableTime')
-    result_updateUserAvailableTime = AvailableTime.updateUserAvailableTime(projectId, userId, availableTime)
+    result_updateUserAvailableTime = AvailableTime.updateAvailableTime_user(projectId, userId, availableTime)
     if(result_updateUserAvailableTime):
+        return HttpResponse("Update success")
+
+def updateAvailableTime_project(request):
+    projectId = request.GET.get('projectId')
+    availableTime = request.GET.get('availableTime')
+    result_updateAvailableTime_project = AvailableTime.updateAvailableTime_project(projectId, availableTime)
+    if(result_updateAvailableTime_project):
         return HttpResponse("Update success")
 
 def getAllAvailableTime_user(request):

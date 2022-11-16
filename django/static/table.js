@@ -1,8 +1,8 @@
 window.onload = function() {
-    information.init();
+    projectData.init();
     formTable.init();
     login.init();
-    formTable.reloadAvailableTime_project();
+    formTable.loadAvailableTime_project();
 }
 
 mouseDown = false;
@@ -14,7 +14,7 @@ projectId = -1;
 userId = -1;
 countOfUser = -1;
 
-var information = {
+var projectData = {
     init() {
         this.getProjectId();
         this.getUserCount();
@@ -79,6 +79,7 @@ var formTable = {
                 div_cell.id = "user" + (row*7 + cell);
 
                 div_cell.addEventListener("mousedown", function mousedownHandle() {
+                    // user table
                     var myCell = document.getElementById("user" + (row*7 + cell));
                     if(myCell.style.backgroundColor == "white") {
                         fillInColor = "green";
@@ -88,36 +89,76 @@ var formTable = {
                         isGreen = 0;
                     }
                     myCell.style.backgroundColor = fillInColor;
+
+                    // project table
+                    var myCell_project = document.getElementById("project" + (row*7 + cell));
+                    projectTime[row*7 + cell] = projectTime[row*7 + cell] - userTime[row*7 + cell] + isGreen;
+                    if(projectTime[row*7 + cell] == 0) {
+                        myCell_project.style.backgroundColor = "white";
+                        myCell_project.style.opacity = 1;
+                    }
+                    else {
+                        myCell_project.style.backgroundColor = "green";
+                        myCell_project.style.opacity = projectTime[row*7 + cell] / countOfUser;
+                    }
                     userTime[row*7 + cell] = isGreen;
                     mouseDown = true;
                 })
 
                 div_cell.addEventListener('mouseup', function mouseupHandle() {
                     mouseDown = false;
-                    availableTime = "";
-                    userTime.forEach(function(value) {
-                        availableTime += "," + value;
-                    })
                     // Update user available time.
+                    availableTime_user = "";
+                    userTime.forEach(function(value) {
+                        availableTime_user += "," + value;
+                    })
                     $.ajax({
-                        url: "updateUserAvailableTime/",
+                        url: "updateAvailableTime_user/",
                         data: {
                             'projectId': projectId,
                             'userId': userId,
-                            'availableTime': availableTime.substring(1)
+                            'availableTime': availableTime_user.substring(1)
                         },
                         success: function(return_data){
-                            if(return_data == "Update success"){
-                                formTable.reloadAvailableTime_project();
-                            }
+                            if(return_data != "Update success") alert(return_data);
+                        }
+                    })
+
+                    // Update project available time.
+                    availableTime_project = "";
+                    projectTime.forEach(function(value) {
+                        availableTime_project += "," + value;
+                    })
+                    $.ajax({
+                        url: "updateAvailableTime_project/",
+                        data: {
+                            'projectId': projectId,
+                            'availableTime': availableTime_project.substring(1)
+                        },
+                        success: function(return_data){
+                            if(return_data != "Update success") alert(return_data);
                         }
                     })
                 })
 
                 div_cell.addEventListener('mousemove', function mousemoveHandle() {
                     if(mouseDown) {
+                        // user table
                         var myCell = document.getElementById("user" + (row*7 + cell));
                         myCell.style.backgroundColor = fillInColor;
+
+                        // project table
+                        var myCell_project = document.getElementById("project" + (row*7 + cell));
+                        projectTime[row*7 + cell] = projectTime[row*7 + cell] - userTime[row*7 + cell] + isGreen;
+                        if(projectTime[row*7 + cell] == 0) {
+                            myCell_project.style.backgroundColor = "white";
+                            myCell_project.style.opacity = 1;
+                        }
+                        else {
+                            myCell_project.style.backgroundColor = "green";
+                            myCell_project.style.opacity = projectTime[row*7 + cell] / countOfUser;
+                        }
+
                         userTime[row*7 + cell] = isGreen;
                     }
                 })
@@ -141,7 +182,30 @@ var formTable = {
             table.appendChild(div_row);
         }
     },
-    reloadAvailableTime_user() {
+    loadAvailableTime_project() {
+        // Get project available time.
+        $.ajax({
+            url: "getAllAvailableTime_project/",
+            data: {
+                'projectId': projectId
+            },
+            success: function(return_data){
+                projectTime = JSON.parse(return_data);
+                for(let i = 0; i < projectTime.length; i++) {
+                    var myCell = document.getElementById("project" + i);
+                    if(projectTime[i] == 0) {
+                        myCell.style.backgroundColor = "white";
+                        myCell.style.opacity = 1;
+                    }
+                    else {
+                        myCell.style.backgroundColor = "green";
+                        myCell.style.opacity = projectTime[i] / countOfUser;
+                    }
+                }
+            }
+        })
+    },
+    loadAvailableTime_user() {
         // Get user available time.
         $.ajax({
             url: "getAllAvailableTime_user/",
@@ -161,28 +225,17 @@ var formTable = {
         })
     },
     reloadAvailableTime_project() {
-        // Get project available time.
-        $.ajax({
-            url: "getAllAvailableTime_project/",
-            data: {
-                'projectId': projectId
-            },
-            success: function(return_data){
-                return_data = JSON.parse(return_data);
-                for(let i = 0; i < return_data.length; i++) {
-                    projectTime[i] = return_data[i];
-                    var myCell = document.getElementById("project" + i);
-                    if(projectTime[i] == 0) {
-                        myCell.style.backgroundColor = "white";
-                        myCell.style.opacity = 1;
-                    }
-                    else {
-                        myCell.style.backgroundColor = "green";
-                        myCell.style.opacity = projectTime[i] / countOfUser;
-                    }
-                }
+        for(let i = 0; i < projectTime.length; i++) {
+            var myCell = document.getElementById("project" + i);
+            if(projectTime[i] == 0) {
+                myCell.style.backgroundColor = "white";
+                myCell.style.opacity = 1;
             }
-        })
+            else {
+                myCell.style.backgroundColor = "green";
+                myCell.style.opacity = projectTime[i] / countOfUser;
+            }
+        }
     }
 }
 
@@ -206,7 +259,7 @@ var login = {
                     'projectId': projectId
                 },
                 success: function(return_data){
-                    information.getUserCount();
+                    projectData.getUserCount();
                     login.switchScreen(return_data, userName_enter);
                 }
             })
@@ -241,7 +294,7 @@ var login = {
         return_data = JSON.parse(return_data);
         if(return_data.result == "Login success" || return_data.result == "Sign up success") {
             userId = return_data.userId;
-            formTable.reloadAvailableTime_user();
+            formTable.loadAvailableTime_user();
             $("#userLogin").hide();
             $("#userTable").show();
             $("#userName").text(userName_enter);

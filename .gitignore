@@ -1,0 +1,8 @@
+.vscode
+/__pycache__
+django/myvenv/
+django/post/migrations/
+django/mysite/__pycache__/
+django/post/__pycache__/
+django/static/__pycache__/
+django/gcloud/

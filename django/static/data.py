@@ -54,22 +54,15 @@ class UserSignUp:
             return False
 
 class AvailableTime:
-    def updateUserAvailableTime(projectId, userId, availableTime):
+    def updateAvailableTime_user(projectId, userId, availableTime):
         cparticipation = Participation.objects.get(userId=userId)
-        userAvailableTime = str(cparticipation.availableTime).split(",")
-        cproject = Project.objects.get(id=projectId)
-        projectAvailableTime = str(cproject.availableTime).split(",")
-        newAvailableTime = str(availableTime).split(",")
-
-        newAvailableTime_str = ""
-        for i in range(0, len(projectAvailableTime)):
-            projectAvailableTime[i] = str(int(projectAvailableTime[i]) - int(userAvailableTime[i]) + int(newAvailableTime[i]))
-            newAvailableTime_str += "," + projectAvailableTime[i]
-        newAvailableTime_str = newAvailableTime_str[1:]
-
         cparticipation.availableTime = str(availableTime)
-        cproject.availableTime = newAvailableTime_str
         cparticipation.save()
+        return True
+
+    def updateAvailableTime_project(projectId, availableTime):
+        cproject = Project.objects.get(id=projectId)
+        cproject.availableTime = str(availableTime)
         cproject.save()
         return True
 
