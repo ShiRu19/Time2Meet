@@ -201,24 +201,19 @@ var formTable = {
                 div_cell.style.backgroundColor = "white";
                 div_cell.id = "project" + (row*7 + cell);
                 projectTime.push(0);
+
                 div_cell.addEventListener('mouseenter', function mouseenterHandle() {
                     var availableUser = [];
                     var unavailableUser = [];
-                    var str1 = "";
-                    var str2 = "";
                     Object.keys(allUserTime).forEach(function(key) {
                         if(allUserTime[key][row*7 + cell] == 1) {
                             availableUser.push(key);
-                            str1 += key + ", ";
                         }
                         else if(allUserTime[key][row*7 + cell] == 0) {
                             unavailableUser.push(key);
-                            str2 += key + ", ";
                         }
                     });
-                    $('#userLogin').hide();
-                    $('#userTable').hide();
-                    $("#availableListTable").show();
+
                     availableUser.forEach(function(user) {
                         const div_available = document.createElement('div');
                         div_available.className = "userList";
@@ -233,9 +228,15 @@ var formTable = {
                         div_unavailable.appendChild(newContent);
                         $('#unavailableList').append(div_unavailable);
                     });
+
                     $("#availableCount").text(availableUser.length + "/" + countOfUser);
+                    $('#userLogin').hide();
+                    $('#userTable').hide();
+                    $("#availableListTable").show();
                 });
+
                 div_cell.addEventListener('mouseleave', function mouseleaveHandle() {
+                    // Clear the list.
                     $('#availableListTable').hide();
                     $('.userList').remove();
                     if(userLogin) {
@@ -247,6 +248,7 @@ var formTable = {
                         $("#userTable").hide();
                     }
                 })
+
                 div_row.appendChild(div_cell);
             }
             table.appendChild(div_row);
