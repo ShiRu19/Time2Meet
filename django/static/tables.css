@@ -18,4 +18,11 @@
 .tables{
     display: inline-block;
     vertical-align: top;
+    border: 1px solid red;
+    width: 30vw;
+}
+.list{
+    display: inline-block;
+    vertical-align: top;
+    width: 14vw;
 }

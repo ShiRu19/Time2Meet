@@ -73,6 +73,11 @@ def getAllAvailableTime_user(request):
     result_getAllAvailableTime_user = AvailableTime.getAllAvailableTime_user(userId)
     return HttpResponse(json.dumps(result_getAllAvailableTime_user))
 
+def getAvailableTime_allUser(request):
+    projectId = request.GET.get('projectId')
+    result_getAvailableTime_allUser = AvailableTime.getAvailableTime_allUser(projectId)
+    return HttpResponse(json.dumps(result_getAvailableTime_allUser))
+
 def getAllAvailableTime_project(request):
     projectId = request.GET.get('projectId')
     result_getAllAvailableTime_project = AvailableTime.getAllAvailableTime_project(projectId)
@@ -80,5 +85,5 @@ def getAllAvailableTime_project(request):
 
 def getUserCount(request):
     projectId = request.GET.get('projectId')
-    result_getUserCount = User.objects.all().count()
-    return HttpResponse(result_getUserCount)
+    result_getUserCount = Participation.objects.filter(projectId=projectId)
+    return HttpResponse(result_getUserCount.count())

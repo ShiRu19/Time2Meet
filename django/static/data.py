@@ -71,6 +71,14 @@ class AvailableTime:
         userAvailableTime = str(cparticipation.availableTime).split(",")
         return userAvailableTime
 
+    def getAvailableTime_allUser(projectId):
+        cparticipation = Participation.objects.filter(projectId=projectId)
+        userAvailableTime = {}
+        for user_i in cparticipation:
+            cuser = User.objects.get(id=user_i.userId)
+            userAvailableTime[cuser.userName] = str(user_i.availableTime).split(",")
+        return userAvailableTime
+
     def getAllAvailableTime_project(projectId):
         cproject = Project.objects.get(id=projectId)
         projectAvailableTime = str(cproject.availableTime).split(",")

@@ -3,6 +3,12 @@ window.onload = function() {
     formTable.init();
     login.init();
     formTable.loadAvailableTime_project();
+    $('#flexSwitchCheck_uncertain').click(function() {
+        if($('#flexSwitchCheck_uncertain').prop("checked")) {
+            alert("clicked");
+        }
+    });
+    
 }
 
 mouseDown = false;
@@ -10,14 +16,17 @@ fillInColor = "white";
 isGreen = 0;
 userTime = [];
 projectTime = [];
+allUserTime = {};
 projectId = -1;
 userId = -1;
 countOfUser = -1;
+userLogin = false;
 
 var projectData = {
     init() {
         this.getProjectId();
         this.getUserCount();
+        this.getAvailableTime_allUser();
     },
     getProjectId() {
         // reload project id
@@ -34,7 +43,19 @@ var projectData = {
             success: function(return_data){
                 countOfUser = return_data;
             }
-        })
+        });
+    },
+    getAvailableTime_allUser() {
+        // Get all user available time.
+        $.ajax({
+            url: "getAvailableTime_allUser/",
+            data: {
+                'projectId': projectId
+            },
+            success: function(return_data){
+                allUserTime = JSON.parse(return_data);
+            }
+        });
     }
 }
 
@@ -103,7 +124,7 @@ var formTable = {
                     }
                     userTime[row*7 + cell] = isGreen;
                     mouseDown = true;
-                })
+                });
 
                 div_cell.addEventListener('mouseup', function mouseupHandle() {
                     mouseDown = false;
@@ -111,7 +132,7 @@ var formTable = {
                     availableTime_user = "";
                     userTime.forEach(function(value) {
                         availableTime_user += "," + value;
-                    })
+                    });
                     $.ajax({
                         url: "updateAvailableTime_user/",
                         data: {
@@ -122,7 +143,7 @@ var formTable = {
                         success: function(return_data){
                             if(return_data != "Update success") alert(return_data);
                         }
-                    })
+                    });
 
                     // Update project available time.
                     availableTime_project = "";
@@ -138,8 +159,11 @@ var formTable = {
                         success: function(return_data){
                             if(return_data != "Update success") alert(return_data);
                         }
-                    })
-                })
+                    });
+
+                    // Update all user available time.
+                    allUserTime["user" + userId] = userTime;
+                });
 
                 div_cell.addEventListener('mousemove', function mousemoveHandle() {
                     if(mouseDown) {
@@ -161,7 +185,7 @@ var formTable = {
 
                         userTime[row*7 + cell] = isGreen;
                     }
-                })
+                });
 
                 div_row.appendChild(div_cell);
             }
@@ -177,6 +201,52 @@ var formTable = {
                 div_cell.style.backgroundColor = "white";
                 div_cell.id = "project" + (row*7 + cell);
                 projectTime.push(0);
+                div_cell.addEventListener('mouseenter', function mouseenterHandle() {
+                    var availableUser = [];
+                    var unavailableUser = [];
+                    var str1 = "";
+                    var str2 = "";
+                    Object.keys(allUserTime).forEach(function(key) {
+                        if(allUserTime[key][row*7 + cell] == 1) {
+                            availableUser.push(key);
+                            str1 += key + ", ";
+                        }
+                        else if(allUserTime[key][row*7 + cell] == 0) {
+                            unavailableUser.push(key);
+                            str2 += key + ", ";
+                        }
+                    });
+                    $('#userLogin').hide();
+                    $('#userTable').hide();
+                    $("#availableListTable").show();
+                    availableUser.forEach(function(user) {
+                        const div_available = document.createElement('div');
+                        div_available.className = "userList";
+                        const newContent = document.createTextNode(user);
+                        div_available.appendChild(newContent);
+                        $('#availableList').append(div_available);
+                    });
+                    unavailableUser.forEach(function(user) {
+                        const div_unavailable = document.createElement('div');
+                        div_unavailable.className = "userList";
+                        const newContent = document.createTextNode(user);
+                        div_unavailable.appendChild(newContent);
+                        $('#unavailableList').append(div_unavailable);
+                    });
+                    $("#availableCount").text(availableUser.length + "/" + countOfUser);
+                });
+                div_cell.addEventListener('mouseleave', function mouseleaveHandle() {
+                    $('#availableListTable').hide();
+                    $('.userList').remove();
+                    if(userLogin) {
+                        $("#userLogin").hide();
+                        $("#userTable").show();
+                    }
+                    else {
+                        $("#userLogin").show();
+                        $("#userTable").hide();
+                    }
+                })
                 div_row.appendChild(div_cell);
             }
             table.appendChild(div_row);
@@ -222,7 +292,7 @@ var formTable = {
                     }
                 }
             }
-        })
+        });
     },
     reloadAvailableTime_project() {
         for(let i = 0; i < projectTime.length; i++) {
@@ -262,8 +332,8 @@ var login = {
                     projectData.getUserCount();
                     login.switchScreen(return_data, userName_enter);
                 }
-            })
-        })
+            });
+        });
 
         $("#loginBtn").click(function(e) {
             var userName_enter = $("#userName_enter").val();
@@ -284,11 +354,11 @@ var login = {
                 },
                 success: function(return_data){
                     return_data_login = return_data;
-                    result_login = true;
+                    userLogin = true;
                     login.switchScreen(return_data, userName_enter);
                 }
-            })
-        })
+            });
+        });
     },
     switchScreen(return_data, userName_enter) {
         return_data = JSON.parse(return_data);
@@ -296,6 +366,7 @@ var login = {
             userId = return_data.userId;
             formTable.loadAvailableTime_user();
             $("#userLogin").hide();
+            $('#availableListTable').hide();
             $("#userTable").show();
             $("#userName").text(userName_enter);
         }
