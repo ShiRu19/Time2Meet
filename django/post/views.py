@@ -19,8 +19,12 @@ class RegisterProject(ListView):
 
 def createProject(request):
     projectName = request.POST.get('projectName')
+    availableTime = ""
+    for i in range(70):
+        availableTime += ",0"
+    availableTime = availableTime[1:]
     if projectName is not None:
-        cuser = Project.objects.create(projectName=projectName)
+        cuser = Project.objects.create(projectName=projectName, availableTime=availableTime)
         cuser.save()
         return redirect("PostFillOutForm", pk=cuser.pk)
 
@@ -31,15 +35,16 @@ def createUser(request):
 
     result_verifySignUpData = UserSignUp.verifyUserSignUpData(projectId, userName)
     if not result_verifySignUpData:
-        return HttpResponse("User already exists")
-
-    result_createUser = UserSignUp.createUser(userName, userPassword, projectId)
-    if result_createUser["result"]:
-        result_createUser["result"] = "Sign up success"
+        result_createUser = dict()
+        result_createUser["result"] = "User already exists"
+        return HttpResponse(json.dumps(result_createUser))
     else:
-        result_createUser["result"] = "Sign up error"
-
-    return HttpResponse(json.dumps(result_createUser))
+        result_createUser = UserSignUp.createUser(userName, userPassword, projectId)
+        if result_createUser["result"]:
+            result_createUser["result"] = "Sign up success"
+        else:
+            result_createUser["result"] = "Sign up error"
+        return HttpResponse(json.dumps(result_createUser))
 
 def userLogin(request):
     userName = request.GET.get('userName')

@@ -30,8 +30,8 @@ class UserSignUp:
                 availableTime += ",0"
             availableTime = availableTime[1:]
 
-            cuser = User.objects.create(userName=userName, userPassword=userPassword, availableTime=availableTime)
-            cparticipation = Participation.objects.create(projectId=projectId, userId=cuser.pk)
+            cuser = User.objects.create(userName=userName, userPassword=userPassword)
+            cparticipation = Participation.objects.create(projectId=projectId, userId=cuser.pk, availableTime=availableTime)
             resultDict['result'] = 1
             resultDict['userId'] = cuser.pk
             cuser.save()

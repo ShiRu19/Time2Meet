@@ -204,10 +204,14 @@ var formTable = {
 
                 div_cell.addEventListener('mouseenter', function mouseenterHandle() {
                     var availableUser = [];
+                    var uncertainUser = [];
                     var unavailableUser = [];
                     Object.keys(allUserTime).forEach(function(key) {
                         if(allUserTime[key][row*7 + cell] == 1) {
                             availableUser.push(key);
+                        }
+                        else if(allUserTime[key][row*7 + cell] == 2) {
+                            uncertainUser.push(key);
                         }
                         else if(allUserTime[key][row*7 + cell] == 0) {
                             unavailableUser.push(key);
@@ -220,6 +224,13 @@ var formTable = {
                         const newContent = document.createTextNode(user);
                         div_available.appendChild(newContent);
                         $('#availableList').append(div_available);
+                    });
+                    uncertainUser.forEach(function(user) {
+                        const div_uncertainUser = document.createElement('div');
+                        div_uncertainUser.className = "userList";
+                        const newContent = document.createTextNode(user);
+                        div_uncertainUser.appendChild(newContent);
+                        $('#uncertainList').append(div_uncertainUser);
                     });
                     unavailableUser.forEach(function(user) {
                         const div_unavailable = document.createElement('div');
@@ -321,7 +332,6 @@ var login = {
                 alert("Please enter your name.");
                 return;
             }
-
             // Create new user.
             $.ajax({
                 url: "createUser/",
@@ -331,8 +341,14 @@ var login = {
                     'projectId': projectId
                 },
                 success: function(return_data){
-                    projectData.getUserCount();
-                    login.switchScreen(return_data, userName_enter);
+                    return_data = JSON.parse(return_data);
+                    if(return_data.result == "Sign up success") {
+                        projectData.getUserCount();
+                        login.switchScreen(return_data, userName_enter);
+                    }
+                    else {
+                        alert(return_data.result);
+                    }
                 }
             });
         });
@@ -355,15 +371,19 @@ var login = {
                     'projectId': projectId
                 },
                 success: function(return_data){
-                    return_data_login = return_data;
-                    userLogin = true;
-                    login.switchScreen(return_data, userName_enter);
+                    return_data = JSON.parse(return_data);
+                    if(return_data.result == "Login success") {
+                        userLogin = true;
+                        login.switchScreen(return_data, userName_enter);
+                    }
+                    else {
+                        alert(return_data.result);
+                    }
                 }
             });
         });
     },
     switchScreen(return_data, userName_enter) {
-        return_data = JSON.parse(return_data);
         if(return_data.result == "Login success" || return_data.result == "Sign up success") {
             userId = return_data.userId;
             formTable.loadAvailableTime_user();
