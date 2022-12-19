@@ -3,24 +3,30 @@ window.onload = function() {
     formTable.init();
     login.init();
     formTable.loadAvailableTime_project();
-    $('#flexSwitchCheck_uncertain').click(function() {
-        if($('#flexSwitchCheck_uncertain').prop("checked")) {
-            alert("clicked");
+    var uncertainCheckbox = $('#flexSwitchCheck_uncertain');
+    uncertainCheckbox.click(function() {
+        if(uncertainCheckbox.prop("checked")) {
+            isUncertainTime = true;
+        }
+        else {
+            isUncertainTime = false;
         }
     });
-    
 }
 
 mouseDown = false;
 fillInColor = "white";
-isGreen = 0;
+yello = "#FFD306";
+isAvailable = 0;
 userTime = [];
 projectTime = [];
 allUserTime = {};
 projectId = -1;
 userId = -1;
+userName = "";
 countOfUser = -1;
-userLogin = false;
+isUserLogin = false;
+isUncertainTime = false;
 
 var projectData = {
     init() {
@@ -103,17 +109,29 @@ var formTable = {
                     // user table
                     var myCell = document.getElementById("user" + (row*7 + cell));
                     if(myCell.style.backgroundColor == "white") {
-                        fillInColor = "green";
-                        isGreen = 1;
+                        if(isUncertainTime) {
+                            fillInColor = yello;
+                            isAvailable = 2;
+                        }
+                        else{
+                            fillInColor = "green";
+                            isAvailable = 1;
+                        }
                     } else {
                         fillInColor = "white";
-                        isGreen = 0;
+                        isAvailable = 0;
                     }
                     myCell.style.backgroundColor = fillInColor;
-
+                    
                     // project table
                     var myCell_project = document.getElementById("project" + (row*7 + cell));
-                    projectTime[row*7 + cell] = projectTime[row*7 + cell] - userTime[row*7 + cell] + isGreen;
+                    if(isUncertainTime && userTime[row*7 + cell] == 1) {
+                        projectTime[row*7 + cell] = projectTime[row*7 + cell] - 1;
+                    }
+                    else if(!isUncertainTime && userTime[row*7 + cell] < 2) {
+                        projectTime[row*7 + cell] = projectTime[row*7 + cell] - userTime[row*7 + cell] + isAvailable;
+                    }
+
                     if(projectTime[row*7 + cell] == 0) {
                         myCell_project.style.backgroundColor = "white";
                         myCell_project.style.opacity = 1;
@@ -122,7 +140,7 @@ var formTable = {
                         myCell_project.style.backgroundColor = "green";
                         myCell_project.style.opacity = projectTime[row*7 + cell] / countOfUser;
                     }
-                    userTime[row*7 + cell] = isGreen;
+                    userTime[row*7 + cell] = isAvailable;
                     mouseDown = true;
                 });
 
@@ -162,7 +180,7 @@ var formTable = {
                     });
 
                     // Update all user available time.
-                    allUserTime["user" + userId] = userTime;
+                    allUserTime[userName] = userTime;
                 });
 
                 div_cell.addEventListener('mousemove', function mousemoveHandle() {
@@ -173,7 +191,13 @@ var formTable = {
 
                         // project table
                         var myCell_project = document.getElementById("project" + (row*7 + cell));
-                        projectTime[row*7 + cell] = projectTime[row*7 + cell] - userTime[row*7 + cell] + isGreen;
+                        if(isUncertainTime && userTime[row*7 + cell] == 1) {
+                            projectTime[row*7 + cell] = projectTime[row*7 + cell] - 1;
+                        }
+                        else if(!isUncertainTime && userTime[row*7 + cell] < 2) {
+                            projectTime[row*7 + cell] = projectTime[row*7 + cell] - userTime[row*7 + cell] + isAvailable;
+                        }
+                        
                         if(projectTime[row*7 + cell] == 0) {
                             myCell_project.style.backgroundColor = "white";
                             myCell_project.style.opacity = 1;
@@ -182,8 +206,7 @@ var formTable = {
                             myCell_project.style.backgroundColor = "green";
                             myCell_project.style.opacity = projectTime[row*7 + cell] / countOfUser;
                         }
-
-                        userTime[row*7 + cell] = isGreen;
+                        userTime[row*7 + cell] = isAvailable;
                     }
                 });
 
@@ -250,7 +273,7 @@ var formTable = {
                     // Clear the list.
                     $('#availableListTable').hide();
                     $('.userList').remove();
-                    if(userLogin) {
+                    if(isUserLogin) {
                         $("#userLogin").hide();
                         $("#userTable").show();
                     }
@@ -302,6 +325,9 @@ var formTable = {
                     var myCell = document.getElementById("user" + i);
                     if(userTime[i] == 1) {
                         myCell.style.backgroundColor = "green";
+                    }
+                    else if(userTime[i] == 2) {
+                        myCell.style.backgroundColor = yello;
                     }
                 }
             }
@@ -373,7 +399,7 @@ var login = {
                 success: function(return_data){
                     return_data = JSON.parse(return_data);
                     if(return_data.result == "Login success") {
-                        userLogin = true;
+                        isUserLogin = true;
                         login.switchScreen(return_data, userName_enter);
                     }
                     else {
@@ -386,6 +412,7 @@ var login = {
     switchScreen(return_data, userName_enter) {
         if(return_data.result == "Login success" || return_data.result == "Sign up success") {
             userId = return_data.userId;
+            userName = userName_enter;
             formTable.loadAvailableTime_user();
             $("#userLogin").hide();
             $('#availableListTable').hide();
