@@ -20,6 +20,7 @@ yello = "#FFD306";
 isAvailable = 0;
 userTime = [];
 projectTime = [];
+projectTime_uncertain = []
 allUserTime = {};
 projectId = -1;
 userId = -1;
@@ -83,8 +84,8 @@ var formTable = {
     createTable_title(table) {
         var div_title = document.createElement('div');
         div_title.className = "titleOfTable";
-        let week = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        for(let cell = 0; cell < 7; cell++) {
+        let week = ['','Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        for(let cell = 0; cell < week.length; cell++) {
             var div_title_cell = document.createElement('div');
             div_title_cell.innerHTML = week[cell];
             div_title.appendChild(div_title_cell);
@@ -93,9 +94,14 @@ var formTable = {
     },
     createTable_user(table) {
         // Create user table.
+        var time = 9;
         for(let row = 0; row < this.createRow; row++) {
             var div_row = document.createElement('div');
             div_row.className = "timeOfTable";
+            var div_time = document.createElement('div');
+            div_time.textContent = time + ":00";
+            div_row.appendChild(div_time);
+            time += 1;
             for(let cell = 0; cell < 7; cell++) {
                 var div_cell = document.createElement('div');
                 div_cell.style.backgroundColor = "white";
@@ -107,8 +113,8 @@ var formTable = {
 
                 div_cell.addEventListener("mousedown", function mousedownHandle() {
                     // user table
-                    var myCell = document.getElementById("user" + (row*7 + cell));
-                    if(myCell.style.backgroundColor == "white") {
+                    var userCell = document.getElementById("user" + (row*7 + cell));
+                    if(userCell.style.backgroundColor == "white") {
                         if(isUncertainTime) {
                             fillInColor = yello;
                             isAvailable = 2;
@@ -121,10 +127,10 @@ var formTable = {
                         fillInColor = "white";
                         isAvailable = 0;
                     }
-                    myCell.style.backgroundColor = fillInColor;
+                    userCell.style.backgroundColor = fillInColor;
                     
                     // project table
-                    var myCell_project = document.getElementById("project" + (row*7 + cell));
+                    var projectCell = document.getElementById("project" + (row*7 + cell));
                     if(isUncertainTime && userTime[row*7 + cell] == 1) {
                         projectTime[row*7 + cell] = projectTime[row*7 + cell] - 1;
                     }
@@ -133,13 +139,14 @@ var formTable = {
                     }
 
                     if(projectTime[row*7 + cell] == 0) {
-                        myCell_project.style.backgroundColor = "white";
-                        myCell_project.style.opacity = 1;
+                        projectCell.style.backgroundColor = "white";
+                        projectCell.style.opacity = 1;
                     }
                     else {
-                        myCell_project.style.backgroundColor = "green";
-                        myCell_project.style.opacity = projectTime[row*7 + cell] / countOfUser;
+                        projectCell.style.backgroundColor = "green";
+                        projectCell.style.opacity = projectTime[row*7 + cell] / countOfUser;
                     }
+                    
                     userTime[row*7 + cell] = isAvailable;
                     mouseDown = true;
                 });
@@ -186,11 +193,11 @@ var formTable = {
                 div_cell.addEventListener('mousemove', function mousemoveHandle() {
                     if(mouseDown) {
                         // user table
-                        var myCell = document.getElementById("user" + (row*7 + cell));
-                        myCell.style.backgroundColor = fillInColor;
+                        var userCell = document.getElementById("user" + (row*7 + cell));
+                        userCell.style.backgroundColor = fillInColor;
 
                         // project table
-                        var myCell_project = document.getElementById("project" + (row*7 + cell));
+                        var projectCell = document.getElementById("project" + (row*7 + cell));
                         if(isUncertainTime && userTime[row*7 + cell] == 1) {
                             projectTime[row*7 + cell] = projectTime[row*7 + cell] - 1;
                         }
@@ -199,13 +206,14 @@ var formTable = {
                         }
                         
                         if(projectTime[row*7 + cell] == 0) {
-                            myCell_project.style.backgroundColor = "white";
-                            myCell_project.style.opacity = 1;
+                            projectCell.style.backgroundColor = "white";
+                            projectCell.style.opacity = 1;
                         }
                         else {
-                            myCell_project.style.backgroundColor = "green";
-                            myCell_project.style.opacity = projectTime[row*7 + cell] / countOfUser;
+                            projectCell.style.backgroundColor = "green";
+                            projectCell.style.opacity = projectTime[row*7 + cell] / countOfUser;
                         }
+
                         userTime[row*7 + cell] = isAvailable;
                     }
                 });
@@ -216,9 +224,14 @@ var formTable = {
         }
     },
     createTable_project(table) {
+        var time = 9;
         for(let row = 0; row < this.createRow; row++) {
             var div_row = document.createElement('div');
             div_row.className = "timeOfTable";
+            var div_time = document.createElement('div');
+            div_time.textContent = time + ":00";
+            div_row.appendChild(div_time);
+            time += 1;
             for(let cell = 0; cell < 7; cell++) {
                 var div_cell = document.createElement('div');
                 div_cell.style.backgroundColor = "white";
@@ -370,7 +383,8 @@ var login = {
                     return_data = JSON.parse(return_data);
                     if(return_data.result == "Sign up success") {
                         projectData.getUserCount();
-                        login.switchScreen(return_data, userName_enter);
+                        alert("User sign up success.");
+                        window.location.reload();
                     }
                     else {
                         alert(return_data.result);

@@ -1,6 +1,7 @@
 .twoTable{
     margin-top: 10vh;
-    text-align: center;
+    /*text-align: center;*/
+    text-align:center;
 }
 .titleOfTable div{
     vertical-align: top;
@@ -14,15 +15,19 @@
     vertical-align: top;
     width: 50px;
     height: 25px;
+    text-align: right;
 }
 .tables{
     display: inline-block;
     vertical-align: top;
-    border: 1px solid red;
+    /*border: 1px solid red;*/
     width: 30vw;
 }
 .list{
     display: inline-block;
     vertical-align: top;
     width: 8vw;
+}
+.uncertainNumber{
+    color: #FFD306;
 }
