@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from post.views import PostFillOutForm, RegisterProject,\
+from post.views import PostFillOutForm, RegisterProject, AboutUs,\
     createProject, createUser, userLogin,\
     updateAvailableTime_user, updateAvailableTime_project,\
     getAllAvailableTime_user, getAvailableTime_allUser, getAllAvailableTime_project,\
@@ -26,6 +26,7 @@ from post.views import PostFillOutForm, RegisterProject,\
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', RegisterProject.as_view()),
+    path('aboutUs', AboutUs.as_view()),
     path('<pk>', PostFillOutForm.as_view(), name="PostFillOutForm"),
     path('createProject/', createProject),
     path('createUser/', createUser),

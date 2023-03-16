@@ -1,0 +1,26 @@
+{% extends 'base_register.html' %}
+{% block body %}
+{% load static %}
+<form method="POST" action="/" style="text-align: center;">
+    {% csrf_token %}
+    <div style="height: 10vh"></div>
+    <div id="projectMotivation" >
+        <h3>開發動機</h3>
+        <p style="margin-top: 2px">
+            參考既有網站 When2meet，<br>
+            製作一個協助統整時間、人數的網站，<br>
+            與其不同的部分為參與者在表格內可填寫的狀態，<br>
+            When2meet 僅可填寫是否參與時段，<br>
+            但生活中總會遇到時間不確定的狀況，<br>
+            因此此專案新增「尚未確定」狀態，方便填寫者填寫，<br>
+            亦協助聚會發起人更了解各時段的參與狀況及人員名單。<br>
+        </p>
+    </div>
+    <div id="opration" style="margin-top: 30px">
+        <h3>操作方式</h3>
+        <p style="margin-top: 2px">
+            
+        </p>
+    </div>
+</form>
+{% endblock %}

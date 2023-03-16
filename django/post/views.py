@@ -17,6 +17,10 @@ class RegisterProject(ListView):
     model = Project
     template_name = 'post_register.html'
 
+class AboutUs(ListView):
+    model = Project
+    template_name = 'post_aboutUs.html'
+
 def createProject(request):
     projectName = request.POST.get('projectName')
     availableTime = ""
